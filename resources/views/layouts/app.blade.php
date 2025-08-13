@@ -35,7 +35,7 @@
                                 <a class="nav-link" href="{{ route('posts.create') }}">Create Post</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('profile') }}">
+                                <a class="nav-link" href="{{ route('profile.index') }}">
                                     <i class="bi bi-person-circle me-1"></i> My Profile
                                 </a>
                             </li>

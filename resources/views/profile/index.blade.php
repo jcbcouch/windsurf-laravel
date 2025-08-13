@@ -6,11 +6,35 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h2>My Profile</h2>
-                    <p class="mb-0">Welcome back, {{ $user->name }}!</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-0">My Profile</h2>
+                            <p class="mb-0">Welcome back, {{ $user->name }}!</p>
+                        </div>
+                        <div class="text-end">
+                            <a href="{{ route('profile.picture.edit') }}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-camera me-1"></i> Update Photo
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="position-relative d-inline-block">
+                            @if($user->avatar)
+                                <img src="{{ $user->avatar_url }}" alt="Profile Picture" 
+                                     class="img-thumbnail rounded-circle" 
+                                     style="width: 150px; height: 150px; object-fit: cover;">
+                            @else
+                                <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center mb-3" 
+                                     style="width: 150px; height: 150px; margin: 0 auto;">
+                                    <span class="display-4 text-white">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
                     <h3>My Posts</h3>
                     
                     @if($posts->count() > 0)

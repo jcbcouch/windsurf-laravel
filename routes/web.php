@@ -27,7 +27,14 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 // Protected routes (require authentication)
 Route::middleware('auth')->group(function () {
     // User profile and roles
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        
+        // Profile picture routes
+        Route::get('/picture/edit', [ProfileController::class, 'editPicture'])->name('picture.edit');
+        Route::patch('/picture', [ProfileController::class, 'updatePicture'])->name('picture.update');
+        Route::delete('/picture', [ProfileController::class, 'destroyPicture'])->name('picture.destroy');
+    });
     
     // Debug route to show current user's roles
     Route::get('/my-roles', function() {
