@@ -7,7 +7,7 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class AdminController extends Controller
+class AdminUsersController extends Controller
 {
     /**
      * Display a paginated listing of users with their roles.
@@ -20,6 +20,20 @@ class AdminController extends Controller
         $allRoles = Role::all();
         
         return view('admin.users.index', compact('users', 'allRoles'));
+    }
+
+    /**
+     * Show the form for editing the specified user's roles.
+     *
+     * @param  int  $id
+     * @return \Illuminate\View\View
+     */
+    public function edit($id)
+    {
+        $user = User::with('roles')->findOrFail($id);
+        $allRoles = Role::all();
+        
+        return view('admin.users.edit', compact('user', 'allRoles'));
     }
 
     /**

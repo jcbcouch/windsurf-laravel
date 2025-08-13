@@ -3,13 +3,13 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-12">
+        <div class="col-md-10">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h2 class="mb-0">Users Management</h2>
-                    <div class="text-muted">
-                        Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} users
-                    </div>
+                    <h2 class="mb-0">Roles Management</h2>
+                    <a href="#" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add New Role
+                    </a>
                 </div>
 
                 <div class="card-body">
@@ -25,38 +25,34 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Roles</th>
-                                    <th>Actions</th>
+                                    <th>Display Name</th>
+                                    <th>Description</th>
                                     <th>Created At</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($users as $user)
+                                @forelse($roles as $role)
                                     <tr>
-                                        <td>{{ $user->id }}</td>
-                                        <td>{{ $user->name }}</td>
-                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $role->id }}</td>
+                                        <td><strong>{{ $role->name }}</strong></td>
+                                        <td>{{ $role->display_name ?? 'N/A' }}</td>
+                                        <td>{{ $role->description ?? 'N/A' }}</td>
+                                        <td>{{ $role->created_at->format('M d, Y') }}</td>
                                         <td>
-                                            @forelse($user->roles as $role)
-                                                <span class="badge bg-primary me-1 mb-1">
-                                                    {{ $role->name }}
-                                                </span>
-                                            @empty
-                                                <span class="text-muted">No roles assigned</span>
-                                            @endforelse
+                                            <div class="btn-group" role="group">
+                                                <a href="#" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </button>
+                                            </div>
                                         </td>
-                                        <td>
-                                            <a href="{{ route('admin.users.edit', $user->id) }}" 
-                                               class="btn btn-sm btn-outline-primary">
-                                                Manage Roles
-                                            </a>
-                                        </td>
-                                        <td>{{ $user->created_at->format('M d, Y') }}</td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">No users found.</td>
+                                        <td colspan="6" class="text-center">No roles found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -64,14 +60,27 @@
                     </div>
 
                     {{-- Pagination --}}
-                    <div class="d-flex justify-content-center mt-4">
-                        {{ $users->links() }}
-                    </div>
+                    @if($roles->hasPages())
+                        <div class="d-flex justify-content-center mt-4">
+                            {{ $roles->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@push('styles')
+<style>
+    .btn-group .btn {
+        margin-right: 0.25rem;
+    }
+    .btn-group .btn:last-child {
+        margin-right: 0;
+    }
+</style>
+@endpush
 
 @push('scripts')
 <script>
