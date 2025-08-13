@@ -26,11 +26,34 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 
 // Protected routes (require authentication)
 Route::middleware('auth')->group(function () {
-    // User profile
+    // User profile and roles
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     
-    // Admin routes
-    Route::prefix('admin')->name('admin.')->group(function () {
+    // Debug route to show current user's roles
+    Route::get('/my-roles', function() {
+        $user = auth()->user();
+        return [
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'has_admin_role' => $user->hasRole('Administrator'),
+            'roles' => $user->roles->map(function($role) {
+                return [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'display_name' => $role->display_name,
+                    'slug' => $role->slug,
+                    'created_at' => $role->created_at
+                ];
+            })
+        ];
+    })->name('my.roles');
+    
+    // Admin routes - protected by admin middleware
+    Route::middleware([\App\Http\Middleware\AdminMiddleware::class])
+        ->prefix('admin')
+        ->name('admin.')
+        ->group(function () {
         // Users management
         Route::get('/users', [AdminUsersController::class, 'index'])->name('users.index');
         Route::get('/users/{user}/edit', [AdminUsersController::class, 'edit'])->name('users.edit');

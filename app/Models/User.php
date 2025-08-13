@@ -67,17 +67,33 @@ class User extends Authenticatable
     /**
      * Check if the user has a specific role.
      *
-     * @param  string|array  $roles
+     * @param  string|array  $roles Role name or slug, or an array of them
      * @return bool
      */
     public function hasRole($roles): bool
     {
+        if (empty($roles)) {
+            return false;
+        }
+
+        $checkRole = function ($roleToCheck) {
+            // Check both name and slug case-insensitively
+            return $this->roles->contains(function ($role) use ($roleToCheck) {
+                return strtolower($role->name) === strtolower($roleToCheck) || 
+                       strtolower($role->slug) === strtolower($roleToCheck);
+            });
+        };
+
         if (is_string($roles)) {
-            return $this->roles->contains('slug', $roles);
+            return $checkRole($roles);
         }
 
         if (is_array($roles)) {
-            return $this->roles->whereIn('slug', $roles)->isNotEmpty();
+            foreach ($roles as $role) {
+                if ($checkRole($role)) {
+                    return true;
+                }
+            }
         }
 
         return false;
