@@ -37,6 +37,11 @@ Route::middleware('auth')->group(function () {
         
         // Roles management
         Route::get('/roles', [AdminRolesController::class, 'index'])->name('roles.index');
+        Route::get('/roles/create', [AdminRolesController::class, 'create'])->name('roles.create');
+        Route::post('/roles', [AdminRolesController::class, 'store'])->name('roles.store');
+        Route::get('/roles/{role}/edit', [AdminRolesController::class, 'edit'])->name('roles.edit');
+        Route::put('/roles/{role}', [AdminRolesController::class, 'update'])->name('roles.update');
+        Route::delete('/roles/{role}', [AdminRolesController::class, 'destroy'])->name('roles.destroy');
         
         // Role assignment
         Route::post('/users/{user}/roles/assign', [AdminUsersController::class, 'assignRole'])

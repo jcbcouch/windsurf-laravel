@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h2 class="mb-0">Roles Management</h2>
-                    <a href="#" class="btn btn-primary">
+                    <a href="{{ route('admin.roles.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Add New Role
                     </a>
                 </div>
@@ -41,12 +41,21 @@
                                         <td>{{ $role->created_at->format('M d, Y') }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="#" class="btn btn-sm btn-outline-primary">
+                                                <a href="{{ route('admin.roles.edit', $role->id) }}" 
+                                                   class="btn btn-sm btn-outline-primary">
                                                     <i class="fas fa-edit"></i> Edit
                                                 </a>
-                                                <button type="button" class="btn btn-sm btn-outline-danger">
-                                                    <i class="fas fa-trash"></i> Delete
-                                                </button>
+                                                <form action="{{ route('admin.roles.destroy', $role->id) }}" 
+                                                      method="POST" 
+                                                      onsubmit="return confirm('Are you sure you want to delete this role?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" 
+                                                            class="btn btn-sm btn-outline-danger"
+                                                            {{ $role->users()->count() > 0 ? 'disabled title="Cannot delete role with assigned users"' : '' }}>
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
