@@ -28,7 +28,11 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::middleware('auth')->group(function () {
     // User profile and roles
     Route::prefix('profile')->name('profile.')->group(function () {
-        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        // Current user's profile
+        Route::get('/my-profile', [ProfileController::class, 'index'])->name('index');
+        
+        // View specific user's profile
+        Route::get('/{user}', [ProfileController::class, 'show'])->name('show');
         
         // Profile picture routes
         Route::get('/picture/edit', [ProfileController::class, 'editPicture'])->name('picture.edit');

@@ -20,7 +20,11 @@
                 <div class="card-body">
                     <h3>{{ $post->title }}</h3>
                     <p class="text-muted">
-                        Posted {{ $post->created_at->diffForHumans() }}
+                        Posted by 
+                        <a href="{{ route('profile.show', $post->user) }}" class="text-decoration-none">
+                            {{ $post->user->name }}
+                        </a>
+                        {{ $post->created_at->diffForHumans() }}
                         @if($post->created_at != $post->updated_at)
                             <br>Last updated {{ $post->updated_at->diffForHumans() }}
                         @endif

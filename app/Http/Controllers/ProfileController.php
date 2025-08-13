@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -18,6 +19,19 @@ class ProfileController extends Controller
         $user = Auth::user()->load('posts');
         
         return view('profile.index', [
+            'user' => $user,
+            'posts' => $user->posts()->latest()->paginate(10)
+        ]);
+    }
+
+    /**
+     * Display the specified user's profile with their posts.
+     */
+    public function show($id)
+    {
+        $user = User::with('posts')->findOrFail($id);
+        
+        return view('profile.show', [
             'user' => $user,
             'posts' => $user->posts()->latest()->paginate(10)
         ]);
