@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 
@@ -26,6 +27,19 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::middleware('auth')->group(function () {
     // User profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    
+    // Admin routes
+    Route::prefix('admin')->name('admin.')->group(function () {
+        // Users management
+        Route::get('/users', [AdminController::class, 'index'])->name('users.index');
+        
+        // Role management
+        Route::post('/users/{user}/roles/assign', [AdminController::class, 'assignRole'])
+            ->name('users.roles.assign');
+            
+        Route::delete('/users/{user}/roles/{role}', [AdminController::class, 'removeRole'])
+            ->name('users.roles.remove');
+    });
     
     // Post management - specific routes first
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
