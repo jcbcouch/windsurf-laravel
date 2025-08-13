@@ -28,6 +28,10 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::middleware('auth')->group(function () {
     Route::post('/posts/{post}/comments', [PostController::class, 'storeComment'])->name('posts.comments.store');
     Route::delete('/posts/{post}/comments/{comment}', [PostController::class, 'destroyComment'])->name('posts.comments.destroy');
+    
+    // Like routes
+    Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
+    Route::delete('/posts/{post}/like', [PostController::class, 'unlike'])->name('posts.unlike');
 });
 
 // Protected routes (require authentication)

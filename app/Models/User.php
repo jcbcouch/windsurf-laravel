@@ -91,6 +91,14 @@ class User extends Authenticatable
     }
 
     /**
+     * The posts that the user has liked.
+     */
+    public function likedPosts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'post_user')->withTimestamps();
+    }
+
+    /**
      * Check if the user has a specific role.
      *
      * @param  string|array  $roles Role name or slug, or an array of them
@@ -147,5 +155,16 @@ class User extends Authenticatable
     {
         $role = Role::where('slug', $roleSlug)->firstOrFail();
         $this->roles()->detach($role->id);
+    }
+
+    /**
+     * Check if the user has liked a specific post.
+     *
+     * @param  int  $postId
+     * @return bool
+     */
+    public function hasLiked(Post $post): bool
+    {
+        return $this->likedPosts()->where('post_id', $post->id)->exists();
     }
 }

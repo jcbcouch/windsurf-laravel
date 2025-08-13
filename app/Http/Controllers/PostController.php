@@ -50,8 +50,12 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        // Eager load comments with their authors to prevent N+1 queries
-        $post->load('comments.user');
+        // Eager load comments with their authors and likes to prevent N+1 queries
+        $post->load(['comments.user', 'likes']);
+        
+        // Append the likes_count and is_liked attributes
+        $post->append(['likes_count', 'is_liked']);
+        
         return view('posts.show', compact('post'));
     }
 
@@ -86,6 +90,38 @@ class PostController extends Controller
         $comment->delete();
 
         return back()->with('success', 'Comment deleted successfully');
+    }
+
+    /**
+     * Like the specified post.
+     */
+    public function like(Post $post)
+    {
+        if (!auth()->check()) {
+            return back()->with('error', 'You must be logged in to like a post.');
+        }
+
+        if (auth()->user()->hasLiked($post)) {
+            return back();
+        }
+
+        $post->likes()->attach(auth()->id());
+
+        return back();
+    }
+
+    /**
+     * Unlike the specified post.
+     */
+    public function unlike(Post $post)
+    {
+        if (!auth()->check()) {
+            return back()->with('error', 'You must be logged in to unlike a post.');
+        }
+
+        $post->likes()->detach(auth()->id());
+
+        return back();
     }
 
     /**

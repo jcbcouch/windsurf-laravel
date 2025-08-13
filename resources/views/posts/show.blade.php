@@ -9,9 +9,9 @@
                     <span>Post Details</span>
                     @auth
                         @if(Auth::id() === $post->user_id)
-                        <div>
+                        <div class="d-flex gap-2">
                             <a href="{{ route('posts.edit', $post) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                            <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this post?')">
+                            <form action="{{ route('posts.destroy', $post) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this post?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
@@ -34,9 +34,37 @@
                         @endif
                     </p>
                     <hr>
-                    <div class="post-content">
+                    <div class="post-content mb-3">
                         {!! nl2br(e($post->body)) !!}
                     </div>
+                    
+                    <!-- Like Button -->
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        @auth
+                            @if($post->is_liked)
+                                <form action="{{ route('posts.unlike', $post) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-link text-decoration-none p-0 border-0 bg-transparent">
+                                        <i class="bi bi-heart-fill text-danger"></i>
+                                    </button>
+                                </form>
+                            @else
+                                <form action="{{ route('posts.like', $post) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-link text-decoration-none p-0 border-0 bg-transparent">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                </form>
+                            @endif
+                        @else
+                            <a href="{{ route('login') }}" class="text-decoration-none">
+                                <i class="bi bi-heart"></i>
+                            </a>
+                        @endauth
+                        <span class="ms-1">{{ $post->likes_count }} {{ Str::plural('like', $post->likes_count) }}</span>
+                    </div>
+                    <hr>
                 </div>
             </div>
 
@@ -113,4 +141,37 @@
         </div>
     </div>
 </div>
+
+@push('styles')
+<style>
+    .post-content {
+        white-space: pre-line;
+    }
+    .btn-link {
+        box-shadow: none !important;
+    }
+    .btn-link:focus {
+        outline: none !important;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+    // Add any JavaScript for like animations here
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add animation class when like button is clicked
+        document.querySelectorAll('[data-like-form]').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const icon = this.querySelector('i');
+                if (icon) {
+                    icon.classList.add('fa-beat');
+                    setTimeout(() => icon.classList.remove('fa-beat'), 700);
+                }
+            });
+        });
+    });
+</script>
+@endpush
+
 @endsection
