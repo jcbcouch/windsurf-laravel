@@ -24,6 +24,12 @@ Route::middleware('guest')->group(function () {
 // Public post routes
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 
+// Comment routes
+Route::middleware('auth')->group(function () {
+    Route::post('/posts/{post}/comments', [PostController::class, 'storeComment'])->name('posts.comments.store');
+    Route::delete('/posts/{post}/comments/{comment}', [PostController::class, 'destroyComment'])->name('posts.comments.destroy');
+});
+
 // Protected routes (require authentication)
 Route::middleware('auth')->group(function () {
     // User profile and roles

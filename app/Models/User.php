@@ -51,29 +51,19 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the URL to the user's profile picture.
+     * Get the URL for the user's avatar.
      *
      * @return string
      */
     public function getAvatarUrlAttribute()
     {
-        return $this->avatar 
-            ? asset('storage/' . $this->avatar)
-            : $this->defaultAvatarUrl();
-    }
-
-    /**
-     * Get the default avatar URL.
-     *
-     * @return string
-     */
-    protected function defaultAvatarUrl()
-    {
-        $name = trim(collect(explode(' ', $this->name))->map(function ($segment) {
-            return mb_substr($segment, 0, 1);
-        })->join(' '));
-
-        return 'https://ui-avatars.com/api/?name='.urlencode($name).'&color=7F9CF5&background=EBF4FF';
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+        
+        // Default avatar if none is set
+        $name = urlencode($this->name);
+        return "https://ui-avatars.com/api/?name={$name}&color=7F9CF5&background=EBF4FF";
     }
 
     /**
@@ -90,6 +80,14 @@ class User extends Authenticatable
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
+    }
+
+    /**
+     * Get the comments for the user.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 
     /**

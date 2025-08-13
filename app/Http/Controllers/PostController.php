@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,7 +50,42 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
+        // Eager load comments with their authors to prevent N+1 queries
+        $post->load('comments.user');
         return view('posts.show', compact('post'));
+    }
+
+    /**
+     * Store a newly created comment for the post.
+     */
+    public function storeComment(Request $request, Post $post)
+    {
+        $validated = $request->validate([
+            'body' => 'required|string|max:1000',
+        ]);
+
+        $comment = new Comment([
+            'body' => $validated['body'],
+            'user_id' => auth()->id(),
+        ]);
+
+        $post->comments()->save($comment);
+
+        return back()->with('success', 'Comment added successfully');
+    }
+
+    /**
+     * Remove the specified comment from storage.
+     */
+    public function destroyComment(Post $post, Comment $comment)
+    {
+        if (Auth::id() !== $comment->user_id && !Auth::user()->hasRole('admin')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $comment->delete();
+
+        return back()->with('success', 'Comment deleted successfully');
     }
 
     /**
