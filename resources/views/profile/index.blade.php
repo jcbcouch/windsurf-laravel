@@ -12,8 +12,11 @@
                             <p class="mb-0">Welcome back, {{ $user->name }}!</p>
                         </div>
                         <div class="text-end">
-                            <a href="{{ route('profile.picture.edit') }}" class="btn btn-sm btn-outline-primary">
+                            <a href="{{ route('profile.picture.edit') }}" class="btn btn-sm btn-outline-primary me-2">
                                 <i class="fas fa-camera me-1"></i> Update Photo
+                            </a>
+                            <a href="{{ route('profile.background.edit') }}" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-palette me-1"></i> Change Background
                             </a>
                         </div>
                     </div>

@@ -48,6 +48,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/picture/edit', [ProfileController::class, 'editPicture'])->name('picture.edit');
         Route::patch('/picture', [ProfileController::class, 'updatePicture'])->name('picture.update');
         Route::delete('/picture', [ProfileController::class, 'destroyPicture'])->name('picture.destroy');
+        
+        // Background color routes
+        Route::get('/background/edit', [ProfileController::class, 'editBackground'])->name('background.edit');
+        Route::patch('/background', [ProfileController::class, 'updateBackground'])->name('background.update');
     });
     
     // Debug route to show current user's roles

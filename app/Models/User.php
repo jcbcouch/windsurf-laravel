@@ -25,6 +25,16 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar',
+        'background_color',
+    ];
+
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'background_color' => '#ffffff',
     ];
 
     /**

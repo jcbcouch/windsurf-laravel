@@ -4,8 +4,8 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
+            <div class="card" style="background-color: {{ $user->background_color }}55;"> 
+                <div class="card-header" style="background-color: {{ $user->background_color }};">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h2 class="mb-0">{{ $user->name }}'s Profile</h2>
@@ -14,7 +14,10 @@
                         @auth
                             @if(Auth::id() === $user->id)
                                 <div class="text-end">
-                                    <a href="{{ route('profile.picture.edit') }}" class="btn btn-sm btn-outline-primary">
+                                    <a href="{{ route('profile.background.edit') }}" class="btn btn-sm btn-outline-light me-2">
+                                        <i class="fas fa-palette me-1"></i> Change Background
+                                    </a>
+                                    <a href="{{ route('profile.picture.edit') }}" class="btn btn-sm btn-outline-light">
                                         <i class="fas fa-camera me-1"></i> Update Photo
                                     </a>
                                 </div>
@@ -28,11 +31,11 @@
                         <div class="position-relative d-inline-block">
                             @if($user->avatar)
                                 <img src="{{ $user->avatar_url }}" alt="Profile Picture" 
-                                     class="img-thumbnail rounded-circle" 
-                                     style="width: 150px; height: 150px; object-fit: cover;">
+                                     class="img-thumbnail rounded-circle border-3" 
+                                     style="width: 150px; height: 150px; object-fit: cover; border-color: {{ $user->background_color }} !important;">
                             @else
-                                <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center mb-3" 
-                                     style="width: 150px; height: 150px; margin: 0 auto;">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center mb-3" 
+                                     style="width: 150px; height: 150px; margin: 0 auto; background-color: {{ $user->background_color }};">
                                     <span class="display-4 text-white">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
                                 </div>
                             @endif

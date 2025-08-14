@@ -94,4 +94,30 @@ class ProfileController extends Controller
         
         return back()->with('error', 'No profile picture to remove.');
     }
+
+    /**
+     * Show the form for editing the user's background color.
+     */
+    public function editBackground()
+    {
+        return view('profile.edit-background', [
+            'user' => auth()->user()
+        ]);
+    }
+
+    /**
+     * Update the user's background color.
+     */
+    public function updateBackground(Request $request)
+    {
+        $validated = $request->validate([
+            'background_color' => 'required|string|size:7|starts_with:#|regex:/^#[a-f0-9]{6}$/i',
+        ]);
+
+        auth()->user()->update($validated);
+
+        return redirect()
+            ->route('profile.index')
+            ->with('status', 'Background color updated successfully!');
+    }
 }
