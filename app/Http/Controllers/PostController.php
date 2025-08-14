@@ -14,8 +14,19 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::latest()->paginate(10);
-        return view('posts.index', compact('posts'));
+        $sort = request()->input('sort', 'newest');
+        
+        $posts = Post::withCount('likes')
+            ->when($sort === 'most_liked', function($query) {
+                return $query->orderByDesc('likes_count')
+                           ->orderByDesc('created_at');
+            }, function($query) {
+                return $query->latest();
+            })
+            ->paginate(10)
+            ->withQueryString();
+            
+        return view('posts.index', compact('posts', 'sort'));
     }
 
     /**

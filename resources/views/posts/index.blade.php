@@ -7,9 +7,21 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <span>All Posts</span>
-                    @auth
-                        <a href="{{ route('posts.create') }}" class="btn btn-primary btn-sm">Create New Post</a>
-                    @endauth
+                    <div class="d-flex align-items-center">
+                        <span class="me-2">Sort by:</span>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ $sort === 'most_liked' ? 'Most Liked' : 'Newest' }}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="sortDropdown">
+                                <li><a class="dropdown-item {{ $sort === 'newest' ? 'active' : '' }}" href="{{ request()->fullUrlWithQuery(['sort' => 'newest']) }}">Newest</a></li>
+                                <li><a class="dropdown-item {{ $sort === 'most_liked' ? 'active' : '' }}" href="{{ request()->fullUrlWithQuery(['sort' => 'most_liked']) }}">Most Liked</a></li>
+                            </ul>
+                        </div>
+                        @auth
+                            <a href="{{ route('posts.create') }}" class="btn btn-primary btn-sm ms-3">Create New Post</a>
+                        @endauth
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -28,6 +40,9 @@
                                             <h5 class="mb-1">{{ $post->title }}</h5>
                                             <small class="text-muted">
                                                 Posted by {{ $post->user->name }} • {{ $post->created_at->diffForHumans() }}
+                                                @if($sort === 'most_liked')
+                                                    • {{ $post->likes_count }} {{ Str::plural('like', $post->likes_count) }}
+                                                @endif
                                             </small>
                                         </div>
                                         <span class="text-muted">
