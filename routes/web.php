@@ -7,6 +7,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\VideoController;
 
 // Public routes
 Route::get('/', function () {
@@ -23,6 +24,9 @@ Route::middleware('guest')->group(function () {
 
 // Public post routes
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+
+// Public video routes
+Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
 
 // Comment routes
 Route::middleware('auth')->group(function () {
@@ -105,6 +109,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+    
+    // Video Routes
+    Route::middleware(['verified'])->group(function () {
+        Route::get('/videos/create', [VideoController::class, 'create'])->name('videos.create');
+        Route::post('/videos', [VideoController::class, 'store'])->name('videos.store');
+        Route::delete('/videos/{video}', [VideoController::class, 'destroy'])->name('videos.destroy');
+    });
+    
+    // Public video view route
+    Route::get('/videos/{video}', [VideoController::class, 'show'])->name('videos.show');
     
     // Logout Route
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

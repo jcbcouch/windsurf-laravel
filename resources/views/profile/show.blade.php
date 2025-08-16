@@ -82,6 +82,49 @@
                             {{ $user->name }} hasn't created any posts yet.
                         </div>
                     @endif
+
+                    <div class="mt-5">
+                        <h3>{{ $user->name }}'s Videos</h3>
+                        
+                        @if($user->videos->count() > 0)
+                            <div class="list-group">
+                                @foreach($user->videos as $video)
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <a href="{{ route('videos.show', $video) }}" class="text-decoration-none">
+                                                <h5 class="mb-1">Video #{{ $video->id }}</h5>
+                                            </a>
+                                            @auth
+                                                @if(Auth::id() === $user->id)
+                                                    <form action="{{ route('videos.destroy', $video) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this video?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                            <i class="fas fa-trash"></i> Delete
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            @endauth
+                                        </div>
+                                        @if($video->created_at)
+                                            <small class="text-muted">
+                                                Uploaded {{ $video->created_at->diffForHumans() }}
+                                            </small>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-muted">No videos uploaded yet.</p>
+                            @auth
+                                @if(Auth::id() === $user->id)
+                                    <a href="{{ route('videos.create') }}" class="btn btn-primary mt-2">
+                                        <i class="fas fa-upload me-1"></i> Upload Your First Video
+                                    </a>
+                                @endif
+                            @endauth
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

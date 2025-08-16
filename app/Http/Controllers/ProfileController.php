@@ -11,12 +11,12 @@ use App\Models\User;
 class ProfileController extends Controller
 {
     /**
-     * Display the authenticated user's profile with their posts.
+     * Display the authenticated user's profile with their posts and videos.
      */
     public function index()
     {
-        // Get the authenticated user with their posts
-        $user = Auth::user()->load('posts');
+        // Get the authenticated user with their posts and videos
+        $user = Auth::user()->load(['posts', 'videos']);
         
         return view('profile.index', [
             'user' => $user,
@@ -25,11 +25,11 @@ class ProfileController extends Controller
     }
 
     /**
-     * Display the specified user's profile with their posts.
+     * Display the specified user's profile with their posts and videos.
      */
     public function show($id)
     {
-        $user = User::with('posts')->findOrFail($id);
+        $user = User::with(['posts', 'videos'])->findOrFail($id);
         
         return view('profile.show', [
             'user' => $user,

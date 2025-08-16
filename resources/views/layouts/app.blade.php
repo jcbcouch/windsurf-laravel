@@ -40,9 +40,17 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('posts.index') }}">Posts</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('videos.index') }}">Videos</a>
+                        </li>
                         @auth
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('posts.create') }}">Create Post</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('videos.create') }}">
+                                    <i class="bi bi-camera-video me-1"></i> Upload Video
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('profile.index') }}">

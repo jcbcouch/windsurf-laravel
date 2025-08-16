@@ -109,6 +109,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the videos for the user.
+     */
+    public function videos(): HasMany
+    {
+        return $this->hasMany(Video::class);
+    }
+
+    /**
      * Check if the user has a specific role.
      *
      * @param  string|array  $roles Role name or slug, or an array of them
